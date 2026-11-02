@@ -10,7 +10,9 @@ public class Main {
      List<Movie> movies = SampleData.getMovies();
         MovieAnalyticsService service = new MovieAnalyticsService();
 
-
+       System.out.println("\n Movie Summaries");
+       service.getMovieSummary(movies).forEach(System.out::println);
+      
         System.out.println("1. Highly Rated Movies:");
         service.getHighlyRatedMovies(movies).forEach(System.out::println);
 
@@ -29,5 +31,8 @@ public class Main {
         System.out.println("\n6. Movies Between 2018 and 2022:");
         service.getMoviesInYearRange(movies, 2018, 2022)
                 .forEach(System.out::println);
+
+
+
     }
 }

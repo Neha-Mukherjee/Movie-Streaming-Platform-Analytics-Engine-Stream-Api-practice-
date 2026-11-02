@@ -1,5 +1,6 @@
 package streamanalytics.service;
 
+import streamanalytics.dto.MovieSummary;
 import streamanalytics.model.Movie;
 
 import java.util.List;
@@ -32,7 +33,29 @@ public class MovieAnalyticsService {
     return movie;
     }
 
+  //   mapping and data transformation
+    public List<String> getMovieTitles(List <Movie> movies) {
+        return movies.stream().map(Movie::getTitle).collect(Collectors.toList());
+    }
+    public List<String> getUppercaseTitles(List <Movie> movies) {
+        return movies.stream().map(movie->movie.getTitle().toUpperCase()).collect(Collectors.toList());
+    }
+    public List<Integer> getDistinctReleaseYears(List <Movie> movies) {
+        return movies.stream().map(Movie::getReleaseYear).distinct().collect(Collectors.toList());
+    }
+    public List<String> getMovieTitlesContainingMoreThanTenCharacters(List <Movie> movies) {
+        return movies.stream().map(Movie::getTitle).filter(title->title.length()>10).collect(Collectors.toList());
+
+    }
+    public List<String> getMovieDescriptions(List <Movie> movies) {
+        return movies.stream().map(movie->movie.getTitle()+"(" + movie.getReleaseYear()+")-Rating: "+movie.getRating()).distinct().collect(Collectors.toList());
+    }
+
+    public List<MovieSummary> getMovieSummary(List <Movie> movies) {
+        return movies.stream().map(movie->new MovieSummary(movie.getMovieId(), movie.getTitle(), movie.getRating())).collect(Collectors.toList());
+    }
 
 }
+
 
 
