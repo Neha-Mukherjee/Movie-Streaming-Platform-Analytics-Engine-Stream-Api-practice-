@@ -3,9 +3,8 @@ package streamanalytics.service;
 import streamanalytics.dto.MovieSummary;
 import streamanalytics.model.Movie;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MovieAnalyticsService {
@@ -98,7 +97,56 @@ public class MovieAnalyticsService {
                 .entrySet().stream().filter(entry->entry.getValue()>1).map(entry->entry.getKey()).sorted().collect(Collectors.toList());
     }
 
-}
+    public Map<String,List<Movie>> getMoviesByLanguage(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getLanguage));
+    }
+    public Map<Integer, Long> countMoviesByReleaseYear(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getReleaseYear,Collectors.counting()));
+    }
+    public Map<String ,Double> averageMovieRating(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getLanguage,Collectors.averagingDouble(Movie::getRating)));
+    }
+    public Map<Boolean ,List<Movie>> getMoviesByAvailability(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::isAvailable));
+    }
+    public Map<Boolean,List<Movie>> getMovieRange(List <Movie> movies) {
+        return movies.stream().collect(Collectors.partitioningBy(movie -> movie.getRating()>=8.0 ));
+    }
+    public Map<Integer , List<String>> getMovieTitlesByReleaseYear(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getReleaseYear,Collectors.mapping(Movie::getTitle,Collectors.toList())));
+    }
 
+    public Map<Integer,Movie> createMapAndDuplicationHandling(List <Movie> movies) {
+        return movies.stream().collect(Collectors.toMap(Movie::getMovieId , Function.identity()));
+    }
+    public Map<String,Double> createMapMoviesTitlesAndRating(List <Movie> movies) {
+        return movies.stream().collect(Collectors.toMap(Movie::getTitle,Movie::getRating));
+    }
+    public Map<String,Integer> createMapMoviesTitlesAndReleaseYears(List <Movie> movies) {
+        return movies.stream().collect(Collectors.toMap(Movie::getTitle,Movie::getReleaseYear));
+    }
+    public Map<String, Movie> createMapWithDuplicateHandling(List<Movie> movies) {
+        return movies.stream()
+                .collect(Collectors.toMap(
+                        Movie::getTitle,
+                        Function.identity(),
+                        (movie1, movie2) -> {
+                            if (movie1.getRating() != movie2.getRating()) {
+                                return movie1.getRating() > movie2.getRating()
+                                        ? movie1 : movie2;
+                            }
+
+                            if (movie1.getReleaseYear() != movie2.getReleaseYear()) {
+                                return movie1.getReleaseYear() > movie2.getReleaseYear()
+                                        ? movie1 : movie2;
+                            }
+
+                            return movie1.getMovieId() < movie2.getMovieId()
+                                    ? movie1 : movie2;
+                        }
+                ));
+    }
+}
+//
 
 

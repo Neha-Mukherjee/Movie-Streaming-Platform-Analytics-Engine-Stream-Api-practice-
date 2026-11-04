@@ -80,5 +80,82 @@ public class Main {
 // 5. Genres appearing more than once
      System.out.println("Repeated Genres: " + service.getRepeatedGenres(movies));
 
+
+     // Problem 5
+
+// 1. Group movies by language
+     System.out.println("\nMovies by Language:");
+     service.getMoviesByLanguage(movies)
+             .forEach((language, movieList) -> {
+              System.out.println(language + ":");
+              movieList.forEach(System.out::println);
+             });
+
+// 2. Count movies by release year
+     System.out.println("\nCount by Release Year:");
+     service.countMoviesByReleaseYear(movies)
+             .forEach((year, count) ->
+                     System.out.println(year + ": " + count));
+
+// 3. Average rating by language
+     System.out.println("\nAverage Rating by Language:");
+     service.averageMovieRating(movies)
+             .forEach((language, average) ->
+                     System.out.println(language + ": " + average));
+
+// 4. Group by availability
+     System.out.println("\nMovies by Availability:");
+     service.getMoviesByAvailability(movies)
+             .forEach((available, movieList) -> {
+              System.out.println("Available = " + available + ":");
+              movieList.forEach(System.out::println);
+             });
+
+// 5. Partition by rating >= 8
+     System.out.println("\nMovies with Rating >= 8:");
+     service.getMovieRange(movies).get(true)
+             .forEach(System.out::println);
+
+     System.out.println("\nMovies with Rating < 8:");
+     service.getMovieRange(movies).get(false)
+             .forEach(System.out::println);
+
+// 6. Group movie titles by release year
+     System.out.println("\nMovie Titles by Release Year:");
+     service.getMovieTitlesByReleaseYear(movies)
+             .forEach((year, titles) ->
+                     System.out.println(year + ": " + titles));
+
+
+
+
+
+// 1. Movie ID -> Movie
+        System.out.println("\nMovie ID to Movie:");
+        service.createMapAndDuplicationHandling(movies)
+                .forEach((id, movie) ->
+                        System.out.println(id + " -> " + movie));
+
+// 2. Movie Title -> Rating
+        System.out.println("\nMovie Title to Rating:");
+        service.createMapMoviesTitlesAndRating(movies)
+                .forEach((title, rating) ->
+                        System.out.println(title + " -> " + rating));
+
+// 3. Movie Title -> Release Year
+        System.out.println("\nMovie Title to Release Year:");
+        service.createMapMoviesTitlesAndReleaseYears(movies)
+                .forEach((title, year) ->
+                        System.out.println(title + " -> " + year));
+
+// 4. Movie Title -> Movie (duplicate titles handled)
+        System.out.println("\nMovie Title to Movie with Duplicate Handling:");
+        service.createMapWithDuplicateHandling(movies)
+                .forEach((title, movie) ->
+                        System.out.println(title + " -> " + movie));
     }
+
+
+
+
 }
