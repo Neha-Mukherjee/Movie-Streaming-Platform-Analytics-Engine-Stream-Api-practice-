@@ -10,6 +10,7 @@ public class Main {
      List<Movie> movies = SampleData.getMovies();
         MovieAnalyticsService service = new MovieAnalyticsService();
 
+        //PART A
         System.out.println("\n Movie Summaries");
        service.getMovieSummary(movies).forEach(System.out::println);
 
@@ -60,6 +61,24 @@ public class Main {
                         () -> System.out.println("No second-highest distinct rating found")
                 );
 
+        //PART B
+
+// 1. All genres
+     System.out.println("All Genres: " + service.getMovieGenres(movies));
+
+// 2. Unique genres, sorted
+     System.out.println("Unique Genres: " + service.getUniqueGenres(movies));
+
+// 3. Total genre assignments
+     System.out.println("Total Genre Assignments: " + service.totalGenres(movies));
+
+// 4. Movies by a specific genre
+     System.out.println("Action Movies:");
+
+     service.getMovieByGenres(movies, "Action").forEach(System.out::println);
+
+// 5. Genres appearing more than once
+     System.out.println("Repeated Genres: " + service.getRepeatedGenres(movies));
 
     }
 }
