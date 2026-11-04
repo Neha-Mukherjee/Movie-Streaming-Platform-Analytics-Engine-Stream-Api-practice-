@@ -3,7 +3,9 @@ package streamanalytics.service;
 import streamanalytics.dto.MovieSummary;
 import streamanalytics.model.Movie;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MovieAnalyticsService {
@@ -54,6 +56,28 @@ public class MovieAnalyticsService {
     public List<MovieSummary> getMovieSummary(List <Movie> movies) {
         return movies.stream().map(movie->new MovieSummary(movie.getMovieId(), movie.getTitle(), movie.getRating())).collect(Collectors.toList());
     }
+
+    //sorting and ranking
+    public List<Movie> sortMovieTitles(List <Movie> movies) {
+        return movies.stream().sorted(Comparator.comparing(Movie::getTitle)).collect(Collectors.toList());
+    }
+    public List<Movie> sortMovieByRating(List <Movie> movies) {
+        return movies.stream().sorted(Comparator.comparing(Movie::getRating).reversed()).collect(Collectors.toList());
+    }
+    public List<Movie> displayTopThreeMovies(List <Movie> movies) {
+        return movies.stream().filter(Movie::isAvailable).sorted(Comparator.comparing(Movie::getRating).reversed()).limit(3).collect(Collectors.toList());
+   }
+   public List<Movie> sortMoviesByReleaseyear(List <Movie> movies) {
+        return movies.stream().sorted(Comparator.comparing(Movie::getReleaseYear).reversed()).collect(Collectors.toList());
+   }
+   public List<Movie> tieMovies(List <Movie> movies) {
+        return movies.stream().sorted(Comparator.comparing(Movie::getRating).reversed().thenComparing(Movie::getTitle)).collect(Collectors.toList());
+   }
+   public Optional<Movie> secondHighestDistinctMovie(List <Movie> movies) {
+        return movies.stream().sorted(Comparator.comparing(Movie::getRating).reversed())
+                .filter(movie -> movies.stream().map(Movie::getRating).distinct().sorted(Comparator.reverseOrder())
+                        .skip(1).findFirst().map(rating->movie.getRating()==rating).orElse(false)).findFirst();
+   }
 
 }
 

@@ -10,9 +10,9 @@ public class Main {
      List<Movie> movies = SampleData.getMovies();
         MovieAnalyticsService service = new MovieAnalyticsService();
 
-       System.out.println("\n Movie Summaries");
+        System.out.println("\n Movie Summaries");
        service.getMovieSummary(movies).forEach(System.out::println);
-      
+
         System.out.println("1. Highly Rated Movies:");
         service.getHighlyRatedMovies(movies).forEach(System.out::println);
 
@@ -32,6 +32,33 @@ public class Main {
         service.getMoviesInYearRange(movies, 2018, 2022)
                 .forEach(System.out::println);
 
+// 1. Sort by title alphabetically
+        System.out.println("\nMovies Sorted by Title:");
+        service.sortMovieTitles(movies).forEach(System.out::println);
+
+// 2. Sort by rating descending
+        System.out.println("\nMovies Sorted by Rating (High to Low):");
+        service.sortMovieByRating(movies).forEach(System.out::println);
+
+// 3. Top 3 highest-rated available movies
+        System.out.println("\nTop 3 Available Movies:");
+        service.displayTopThreeMovies(movies).forEach(System.out::println);
+
+// 4. Sort by release year descending
+        System.out.println("\nMovies Sorted by Release Year:");
+        service.sortMoviesByReleaseyear(movies).forEach(System.out::println);
+
+// 5. Rating descending, then title alphabetically
+        System.out.println("\nMovies Sorted by Rating and Title:");
+        service.tieMovies(movies).forEach(System.out::println);
+
+// 6. Second-highest distinct rating
+        System.out.println("\nSecond Highest Distinct Rated Movie:");
+        service.secondHighestDistinctMovie(movies)
+                .ifPresentOrElse(
+                        System.out::println,
+                        () -> System.out.println("No second-highest distinct rating found")
+                );
 
 
     }
