@@ -3,9 +3,7 @@ package streamanalytics.service;
 import streamanalytics.dto.MovieSummary;
 import streamanalytics.model.Movie;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MovieAnalyticsService {
@@ -98,7 +96,25 @@ public class MovieAnalyticsService {
                 .entrySet().stream().filter(entry->entry.getValue()>1).map(entry->entry.getKey()).sorted().collect(Collectors.toList());
     }
 
+    public Map<String,List<Movie>> getMoviesByLanguage(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getLanguage));
+    }
+    public Map<Integer, Long> countMoviesByReleaseYear(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getReleaseYear,Collectors.counting()));
+    }
+    public Map<String ,Double> averageMovieRating(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getLanguage,Collectors.averagingDouble(Movie::getRating)));
+    }
+    public Map<Boolean ,List<Movie>> getMoviesByAvailability(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::isAvailable));
+    }
+    public Map<Boolean,List<Movie>> getMovieRange(List <Movie> movies) {
+        return movies.stream().collect(Collectors.partitioningBy(movie -> movie.getRating()>=8.0 ));
+    }
+    public Map<Integer , List<String>> getMovieTitlesByReleaseYear(List <Movie> movies) {
+        return movies.stream().collect(Collectors.groupingBy(Movie::getReleaseYear,Collectors.mapping(Movie::getTitle,Collectors.toList())));
+    }
 }
-
+//
 
 

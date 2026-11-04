@@ -80,5 +80,52 @@ public class Main {
 // 5. Genres appearing more than once
      System.out.println("Repeated Genres: " + service.getRepeatedGenres(movies));
 
+
+     // Problem 5 - Grouping and Partitioning
+
+// 1. Group movies by language
+     System.out.println("\nMovies by Language:");
+     service.getMoviesByLanguage(movies)
+             .forEach((language, movieList) -> {
+              System.out.println(language + ":");
+              movieList.forEach(System.out::println);
+             });
+
+// 2. Count movies by release year
+     System.out.println("\nCount by Release Year:");
+     service.countMoviesByReleaseYear(movies)
+             .forEach((year, count) ->
+                     System.out.println(year + ": " + count));
+
+// 3. Average rating by language
+     System.out.println("\nAverage Rating by Language:");
+     service.averageMovieRating(movies)
+             .forEach((language, average) ->
+                     System.out.println(language + ": " + average));
+
+// 4. Group by availability
+     System.out.println("\nMovies by Availability:");
+     service.getMoviesByAvailability(movies)
+             .forEach((available, movieList) -> {
+              System.out.println("Available = " + available + ":");
+              movieList.forEach(System.out::println);
+             });
+
+// 5. Partition by rating >= 8
+     System.out.println("\nMovies with Rating >= 8:");
+     service.getMovieRange(movies).get(true)
+             .forEach(System.out::println);
+
+     System.out.println("\nMovies with Rating < 8:");
+     service.getMovieRange(movies).get(false)
+             .forEach(System.out::println);
+
+// 6. Group movie titles by release year
+     System.out.println("\nMovie Titles by Release Year:");
+     service.getMovieTitlesByReleaseYear(movies)
+             .forEach((year, titles) ->
+                     System.out.println(year + ": " + titles));
     }
+
+
 }
