@@ -78,6 +78,25 @@ public class MovieAnalyticsService {
                 .filter(movie -> movies.stream().map(Movie::getRating).distinct().sorted(Comparator.reverseOrder())
                         .skip(1).findFirst().map(rating->movie.getRating()==rating).orElse(false)).findFirst();
    }
+   //Part B - intermediate Stream Operation
+    public List<String> getMovieGenres(List <Movie> movies) {
+        return movies.stream().flatMap(genre->genre.getGenres().stream()).collect(Collectors.toList());
+    }
+
+    public List<String> getUniqueGenres(List <Movie> movies) {
+        return movies.stream().flatMap(genre->genre.getGenres().stream()).distinct().sorted().collect(Collectors.toList());
+    }
+    public Long totalGenres(List <Movie> movies) {
+        return movies.stream().flatMap(genre->genre.getGenres().stream()).count();
+    }
+    public List<Movie> getMovieByGenres(List <Movie> movies , String genre) {
+        return movies.stream().filter(g->g.getGenres().contains(genre)).collect(Collectors.toList());
+    }
+    public List<String> getRepeatedGenres(List <Movie> movies) {
+        return movies.stream().flatMap(movie -> movie.getGenres().stream())
+                .collect(Collectors.groupingBy(genre->genre,Collectors.counting()))
+                .entrySet().stream().filter(entry->entry.getValue()>1).map(entry->entry.getKey()).sorted().collect(Collectors.toList());
+    }
 
 }
 
