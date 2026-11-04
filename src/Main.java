@@ -81,7 +81,7 @@ public class Main {
      System.out.println("Repeated Genres: " + service.getRepeatedGenres(movies));
 
 
-     // Problem 5 - Grouping and Partitioning
+     // Problem 5
 
 // 1. Group movies by language
      System.out.println("\nMovies by Language:");
@@ -125,7 +125,37 @@ public class Main {
      service.getMovieTitlesByReleaseYear(movies)
              .forEach((year, titles) ->
                      System.out.println(year + ": " + titles));
+
+
+
+
+
+// 1. Movie ID -> Movie
+        System.out.println("\nMovie ID to Movie:");
+        service.createMapAndDuplicationHandling(movies)
+                .forEach((id, movie) ->
+                        System.out.println(id + " -> " + movie));
+
+// 2. Movie Title -> Rating
+        System.out.println("\nMovie Title to Rating:");
+        service.createMapMoviesTitlesAndRating(movies)
+                .forEach((title, rating) ->
+                        System.out.println(title + " -> " + rating));
+
+// 3. Movie Title -> Release Year
+        System.out.println("\nMovie Title to Release Year:");
+        service.createMapMoviesTitlesAndReleaseYears(movies)
+                .forEach((title, year) ->
+                        System.out.println(title + " -> " + year));
+
+// 4. Movie Title -> Movie (duplicate titles handled)
+        System.out.println("\nMovie Title to Movie with Duplicate Handling:");
+        service.createMapWithDuplicateHandling(movies)
+                .forEach((title, movie) ->
+                        System.out.println(title + " -> " + movie));
     }
+
+
 
 
 }
