@@ -1,14 +1,24 @@
 import streamanalytics.model.Movie;
+import streamanalytics.model.ViewingRecord;
 import streamanalytics.service.MovieAnalyticsService;
+import streamanalytics.service.ViewingAnalyticsService;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
      List<Movie> movies = SampleData.getMovies();
+        List<ViewingRecord> viewingRecords = SampleData.getViewingRecords();
         MovieAnalyticsService service = new MovieAnalyticsService();
+        ViewingAnalyticsService viewingService = new ViewingAnalyticsService();
+
+
 
         //PART A
         System.out.println("\n Movie Summaries");
@@ -153,6 +163,57 @@ public class Main {
         service.createMapWithDuplicateHandling(movies)
                 .forEach((title, movie) ->
                         System.out.println(title + " -> " + movie));
+ //part c
+        // 1. Total minutes watched
+        System.out.println("Total Minutes Watched: "
+                + viewingService.GetTotalMinutesWatched(viewingRecords));
+
+        // 2. Highest viewing user
+        Optional<Integer> highestViewingUser =
+                viewingService.getHighestViewingUser(viewingRecords);
+
+        System.out.println("Highest Viewing User: "
+                + highestViewingUser.orElse(-1));
+
+        // 3. Viewing sessions per movie
+        Map<Integer, Long> sessionsPerMovie =
+                viewingService.getViewingSessionsPerMovie(viewingRecords);
+
+        System.out.println("Viewing Sessions Per Movie: "
+                + sessionsPerMovie);
+
+        // 4. Most watched movie
+        Optional<Integer> mostWatchedMovie =
+                viewingService.getMostWatchedMovie(viewingRecords);
+
+        System.out.println("Most Watched Movie ID: "
+                + mostWatchedMovie.orElse(-1));
+
+        // 5. Unique movie IDs viewed by a particular user
+        Integer userId = 1;
+
+        Set<Integer> uniqueMovieIds =
+                viewingService.getUniqueMovieIdsByUser(viewingRecords, userId);
+
+        System.out.println("Unique Movie IDs Viewed by User " + userId + ": "
+                + uniqueMovieIds);
+
+        // 6. Movies with no viewing records
+        List<Movie> unviewedMovies =
+                viewingService.getMoviesWithNoViewingRecords(movies, viewingRecords);
+
+        System.out.println("Movies With No Viewing Records:");
+        unviewedMovies.forEach(System.out::println);
+
+        // 7. Group viewing records by date
+        Map<LocalDate, List<ViewingRecord>> recordsByDate =
+                viewingService.groupViewingRecordsByDate(viewingRecords);
+
+        System.out.println("Viewing Records Grouped By Date:");
+        recordsByDate.forEach((date, records) ->
+                System.out.println(date + " -> " + records));
+
+
     }
 
 
