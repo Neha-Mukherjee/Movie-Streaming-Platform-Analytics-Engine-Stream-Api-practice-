@@ -5,10 +5,7 @@ import streamanalytics.model.ViewingRecord;
 
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -58,6 +55,63 @@ public class ViewingAnalyticsService {
                 .map(ViewingRecord::getMinutesWatched)
                 .reduce(Integer::sum);
     }
+    public Integer getTotalMovieDuration(List<Movie> movies) {
+        return movies.stream().mapToInt(Movie::getDurationMinutes).sum();
+    }
 
+    public OptionalDouble getAverageMovieRating(List<Movie> movies) {
+        return movies.stream().mapToDouble(Movie::getRating).average();
+    }
 
+  public OptionalDouble getHighestRating(List<Movie> movies ) {
+        return  movies.stream().mapToDouble(Movie::getRating).max();
+  }
+    public OptionalDouble getLowestRating(List<Movie> movies ) {
+        return  movies.stream().mapToDouble(Movie::getRating).min();
+    }
+  //  Obtain count, minimum, maximum, sum, and average movie duration using summary statistics.
+  public IntSummaryStatistics getMovieDurationStatistics(List<Movie> movies) {
+      return movies.stream()
+              .mapToInt(Movie::getDurationMinutes)
+              .summaryStatistics();
+  }
+    public Optional<Movie> findMovieById(List<Movie> movies, int movieId) {
+        return movies.stream()
+                .filter(movie -> movie.getMovieId() == movieId)
+                .findFirst();
+    }
+    public Movie getMovieByIdOrThrow(List<Movie> movies, int movieId) {
+        return findMovieById(movies, movieId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Movie ID " + movieId + " not found"));
+    }
+
+    //problem 9
+    public List<Movie> recommendMovies(
+            List<Movie> movies,
+            Set<String> preferredGenres,
+            double minimumRating,
+            int limit) {
+
+        if (preferredGenres == null || preferredGenres.isEmpty()) {
+            return List.of();
+        }
+
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Limit must be greater than 0");
+        }
+
+        return movies.stream()
+                .filter(Movie::isAvailable)
+                .filter(movie -> movie.getRating() >= minimumRating)
+                .filter(movie -> movie.getGenres().stream()
+                        .anyMatch(preferredGenres::contains))
+                .distinct()
+                .sorted(Comparator.comparingDouble(Movie::getRating)
+                        .reversed()
+                        .thenComparing(
+                                Comparator.comparingInt(Movie::getReleaseYear).reversed()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
 }

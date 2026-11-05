@@ -4,10 +4,7 @@ import streamanalytics.service.MovieAnalyticsService;
 import streamanalytics.service.ViewingAnalyticsService;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -213,10 +210,66 @@ public class Main {
         recordsByDate.forEach((date, records) ->
                 System.out.println(date + " -> " + records));
 
+        // Total minutes using reduce
+        System.out.println("Total Minutes Using Reduce: " +
+                viewingService.getTotalMinutesUsingReduce(viewingRecords));
 
+        // Total movie duration
+        System.out.println("Total Movie Duration: " +
+                viewingService.getTotalMovieDuration(movies));
+
+        // Average movie rating
+        System.out.println("Average Movie Rating: " +
+                viewingService.getAverageMovieRating(movies));
+
+        // Highest rating
+        System.out.println("Highest Rating: " +
+                viewingService.getHighestRating(movies));
+
+        // Lowest rating
+        System.out.println("Lowest Rating: " +
+                viewingService.getLowestRating(movies));
+
+        // Movie duration statistics
+        IntSummaryStatistics statistics =
+                viewingService.getMovieDurationStatistics(movies);
+
+        System.out.println("Movie Duration Statistics:");
+        System.out.println("Count: " + statistics.getCount());
+        System.out.println("Minimum: " + statistics.getMin());
+        System.out.println("Maximum: " + statistics.getMax());
+        System.out.println("Sum: " + statistics.getSum());
+        System.out.println("Average: " + statistics.getAverage());
+
+        // Find movie by ID
+        System.out.println("Find Movie By ID:");
+        viewingService.findMovieById(movies, 101)
+                .ifPresentOrElse(
+                        System.out::println,
+                        () -> System.out.println("Movie not found")
+                );
+
+        // Handle movie not found
+        System.out.println("Get Movie By ID Or Throw:");
+        try {
+            System.out.println(viewingService.getMovieByIdOrThrow(movies, 999));
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Problem 9: Movie recommendations
+        System.out.println("Movie Recommendations:");
+
+        List<Movie> recommendations = viewingService.recommendMovies(
+                movies,
+                Set.of("Action", "Sci-Fi"),
+                8.0,
+                3
+        );
+        recommendations.forEach(System.out::println);
+    }
     }
 
 
 
 
-}
