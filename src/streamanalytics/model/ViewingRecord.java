@@ -36,4 +36,8 @@ public class ViewingRecord {
     public LocalDate getWatchedOn() {
         return watchedOn;
     }
+
+    public String toString() {
+        return "Session id:"+sessionId +"\t" + "User id:\t "+ userId + "\t"+"Movie Id:\t "  + movieId + "\t"+"Minutes Watched:\t " + minutesWatched+ "\t"+ "Watched On:\t " + watchedOn+ "\t";
+    }
 }
